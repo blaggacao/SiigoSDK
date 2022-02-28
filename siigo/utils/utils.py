@@ -49,8 +49,8 @@ def paginate(*, parse_response: Callable[[dict], T] = lambda x: x, delay=10, ver
     return inner
 
 
-def parse_date(timestamp: Union[float, int]) -> str:
-    return time.strftime('%Y-%m-%d', time.gmtime(timestamp))
+def parse_date(timestamp: Union[float, int], format: str = '%Y-%m-%d') -> str:
+    return time.strftime(format, time.gmtime(timestamp))
 
 
 def get_or_default(data: dict, key: Any, default=None):

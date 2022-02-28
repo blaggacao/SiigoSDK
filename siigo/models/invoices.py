@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional, Union
+from siigo.core import get_exchange_rate
+from siigo.models.auth import AuthToken
 
 from siigo.models.core import CurrencyCode
 from .products import Item
@@ -29,11 +31,19 @@ class InvoiceCustomer:
 @dataclass
 class Currency:
     code: CurrencyCode
-    exchange_rate: float
+    exchange_rate: Optional[float] = None
+    token: Optional[AuthToken] = None
 
     def __post_init__(self):
         if self.code.value not in CurrencyCode._value2member_map_:
             raise Exception('Currency code not accepted')
+        if self.exchange_rate is None and self.token is None:
+            raise Exception('Exchange rate cannot be None. Set token to query Siigo exchange rate service')
+
+        if self.exchange_rate is None and self.token and self.code is not CurrencyCode.COLOMBIAN_PESO:
+            self.exchange_rate = get_exchange_rate(token=self.token,
+                                                   source=self.code,
+                                                   target=CurrencyCode.COLOMBIAN_PESO)
 
     def to_dict(self) -> dict:
         return {
