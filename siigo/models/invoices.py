@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import List, Optional, Union
 from siigo.core import get_exchange_rate
 from siigo.models.auth import AuthToken
-
 from siigo.models.core import CurrencyCode
 from .products import Item
 

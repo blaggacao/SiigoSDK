@@ -2,6 +2,7 @@ import requests
 from siigo.models.auth import AuthToken
 from siigo.models.products import Item
 from siigo.utils.constants import BASE_URL
+from siigo.utils.requests import check_for_errors
 from siigo.utils.utils import form_headers, paginate
 
 URL = f'{BASE_URL}/v1/products'
@@ -18,4 +19,6 @@ def list_products(token: AuthToken, page: int):
 
 def get_product(id: str, token: AuthToken):
     req = requests.get(f'{URL}/{id}', headers=form_headers(token))
-    return Item.from_dict(req.json())
+    res = req.json()
+    check_for_errors(req=req, res=res)
+    return Item.from_dict(res)

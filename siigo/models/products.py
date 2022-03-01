@@ -61,6 +61,7 @@ class ItemTax:
 @dataclass
 class Item:
     id: str
+    name: str
     code: str
     description: str
     quantity: float
@@ -72,7 +73,7 @@ class Item:
         return {
             'id': self.id,
             'code': self.code,
-            'description': self.description,
+            'description': self.description or self.name,
             'quantity': self.quantity,
             'price': self.price,
             'taxes': [t.to_dict() for t in self.taxes],
@@ -87,9 +88,10 @@ class Item:
             price = get_or_default(prices, 'price_list', [{}])[0].get('value', 0)
 
         return Item(id=data['id'],
+                    name=data.get('name', ''),
                     code=data['code'],
                     description=data['description'],
                     quantity=data.get('quantity', 0),
                     price=price,
                     discount=ItemDiscount.from_dict(data.get('discount')),
-                    taxes=[ItemTax.from_dict(t) for t in data['taxes']])
+                    taxes=[ItemTax.from_dict(t) for t in data.get('taxes', [])])
