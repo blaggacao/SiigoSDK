@@ -81,6 +81,34 @@ class Payment:
 
 
 @dataclass
+class Retention:
+    id: int
+    name: Optional[str] = None
+    type: Optional[str] = None
+    percentage: Optional[float] = None
+    value: Optional[float] = None
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'type': self.type,
+            'percentage': self.percentage,
+            'value': self.value,
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return Retention(
+            id=data['id'],
+            name=data.get('name'),
+            type=data.get('type'),
+            percentage=data.get('percentage'),
+            value=data.get('value'),
+        )
+
+
+@dataclass
 class Invoice:
     id: str
     document_id: int
@@ -96,6 +124,7 @@ class Invoice:
     payments: List[Payment]
     cost_center: Optional[Union[bool, int]] = None
     observations: Optional[str] = None
+    retentions: Optional[List[Retention]] = None
 
     @staticmethod
     def from_dict(res: dict) -> 'Invoice':
@@ -114,4 +143,5 @@ class Invoice:
             items=[Item.from_dict(i) for i in res['items']],
             observations=res.get('observations'),
             payments=[Payment.from_dict(p) for p in res['payments']],
+            retentions=[Retention.from_dict(r) for r in res.get('retentions', [])],
         )
