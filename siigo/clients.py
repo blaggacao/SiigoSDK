@@ -5,7 +5,7 @@ from siigo.models.exceptions import SiigoError
 from siigo.utils.constants import BASE_URL
 from siigo.utils.exceptions import SiigoException
 from siigo.utils.requests import check_for_errors
-from siigo.utils.utils import form_headers, paginate
+from siigo.utils.utils import form_headers, opt_dict, paginate
 
 URL = f'{BASE_URL}/v1/customers'
 
@@ -16,7 +16,7 @@ def create_client(*,
                   client_type: ClientType = ClientType.CUSTOMER,
                   contact: Contact,
                   token: AuthToken) -> Client:
-    data = dict(
+    data = opt_dict(
         type=client_type.value,
         person_type=entity.type.value,
         id_type=id.type.value,
@@ -74,7 +74,7 @@ def update_client(*,
                   client_type: ClientType = ClientType.CUSTOMER,
                   contact: Contact,
                   token: AuthToken) -> Client:
-    data = dict(
+    data = opt_dict(
         type=client_type.value,
         person_type=entity.type.value,
         id_type=id.type.value,

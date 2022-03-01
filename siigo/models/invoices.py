@@ -3,6 +3,7 @@ from typing import List, Optional, Union
 from siigo.core import get_exchange_rate
 from siigo.models.auth import AuthToken
 from siigo.models.core import CurrencyCode
+from siigo.utils.utils import opt_dict
 from .products import Item
 
 
@@ -13,11 +14,11 @@ class InvoiceCustomer:
     branch_office: Optional[int] = None
 
     def to_dict(self) -> dict:
-        return {
-            'identification': self.identification,
-            'id': self.id,
-            'branch_office': self.branch_office,
-        }
+        return opt_dict(
+            identification=self.identification,
+            id=self.id,
+            branch_office=self.branch_office,
+        )
 
     @staticmethod
     def from_dict(res: dict) -> 'InvoiceCustomer':
@@ -45,10 +46,10 @@ class Currency:
                                                    target=CurrencyCode.COLOMBIAN_PESO)
 
     def to_dict(self) -> dict:
-        return {
-            'code': self.code.value,
-            'exchange_rate': self.exchange_rate,
-        }
+        return opt_dict(
+            code=self.code.value,
+            exchange_rate=self.exchange_rate,
+        )
 
     @staticmethod
     def from_dict(res: Optional[dict]) -> Optional['Currency']:
@@ -63,12 +64,12 @@ class Payment:
     due_date: Optional[str] = None
 
     def to_dict(self) -> dict:
-        return {
-            'id': self.id,
-            'name': self.name,
-            'value': self.value,
-            'due_date': self.due_date,
-        }
+        return opt_dict(
+            id=self.id,
+            name=self.name,
+            value=self.value,
+            due_date=self.due_date,
+        )
 
     @staticmethod
     def from_dict(res: dict) -> 'Payment':
@@ -89,13 +90,13 @@ class Retention:
     value: Optional[float] = None
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'type': self.type,
-            'percentage': self.percentage,
-            'value': self.value,
-        }
+        return opt_dict(
+            id=self.id,
+            name=self.name,
+            type=self.type,
+            percentage=self.percentage,
+            value=self.value,
+        )
 
     @staticmethod
     def from_dict(data):

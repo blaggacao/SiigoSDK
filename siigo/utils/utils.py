@@ -1,6 +1,6 @@
 import time
 from functools import wraps
-from typing import Any, Callable, Generic, Type, TypeVar, Generator, Union, Protocol
+from typing import Any, Callable, Generic, TypeVar, Generator, Union, Protocol
 from siigo.models.auth import AuthToken
 
 
@@ -59,5 +59,9 @@ def parse_date(timestamp: Union[float, int], format: str = '%Y-%m-%d') -> str:
     return time.strftime(format, time.gmtime(timestamp))
 
 
-def get_or_default(data: dict, key: Any, default=None):
+def get_or_default(data: dict, key: Any, default):
     return data.get(key) or default
+
+
+def opt_dict(**entries):
+    return {k: v for k, v in entries.items() if v is not None}

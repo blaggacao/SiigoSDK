@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional
-from siigo.utils.utils import get_or_default
+from siigo.utils.utils import get_or_default, opt_dict
 
 
 class TaxType(Enum):
@@ -20,10 +20,10 @@ class ItemDiscount:
     value: float
 
     def to_dict(self) -> dict:
-        return {
-            'percentage': self.percentage,
-            'value': self.value,
-        }
+        return opt_dict(
+            percentage=self.percentage,
+            value=self.value,
+        )
 
     @staticmethod
     def from_dict(data: Optional[dict]) -> Optional['ItemDiscount']:
@@ -45,13 +45,13 @@ class ItemTax:
     value: Optional[float] = None
 
     def to_dict(self) -> dict:
-        return {
-            'id': self.id,
-            'name': self.name,
-            'percentage': self.percentage,
-            'value': self.value,
-            'type': self.type.value,
-        }
+        return opt_dict(
+            id=self.id,
+            name=self.name,
+            percentage=self.percentage,
+            value=self.value,
+            type=self.type.value,
+        )
 
     @staticmethod
     def from_dict(data: dict) -> 'ItemTax':
@@ -70,15 +70,15 @@ class Item:
     discount: Optional[ItemDiscount] = None
 
     def to_dict(self) -> dict:
-        return {
-            'id': self.id,
-            'code': self.code,
-            'description': self.description or self.name,
-            'quantity': self.quantity,
-            'price': self.price,
-            'taxes': [t.to_dict() for t in self.taxes],
-            'discount': self.discount.to_dict() if self.discount else None,
-        }
+        return opt_dict(
+            id=self.id,
+            code=self.code,
+            description=self.description or self.name,
+            quantity=self.quantity,
+            price=self.price,
+            taxes=[t.to_dict() for t in self.taxes],
+            discount=self.discount.to_dict() if self.discount else None,
+        )
 
     @staticmethod
     def from_dict(data: dict) -> 'Item':

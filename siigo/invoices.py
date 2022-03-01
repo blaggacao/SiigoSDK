@@ -6,7 +6,7 @@ from siigo.models.invoices import Currency, Invoice, InvoiceCustomer, Payment, R
 from siigo.models.products import Item
 from siigo.utils.constants import BASE_URL
 from siigo.utils.requests import check_for_errors
-from siigo.utils.utils import form_headers, paginate, parse_date
+from siigo.utils.utils import form_headers, opt_dict, paginate, parse_date
 
 URL = f'{BASE_URL}/v1/invoices'
 
@@ -40,16 +40,17 @@ def create_invoice(*,
                    cost_center: Optional[str] = None,
                    observations: Optional[str] = None,
                    retentions: Optional[List[Retention]] = None) -> Invoice:
-    data = dict(document={'id': doc_id},
-                date=parse_date(date),
-                customer=customer.to_dict(),
-                cost_center=cost_center,
-                currency=currency.to_dict() if currency and currency.code is not CurrencyCode.COLOMBIAN_PESO else None,
-                seller=seller,
-                observations=observations,
-                items=[i.to_dict() for i in items],
-                payments=[p.to_dict() for p in payments],
-                retentions=[r.to_dict() for r in retentions] if retentions else None)
+    data = opt_dict(
+        document={'id': doc_id},
+        date=parse_date(date),
+        customer=customer.to_dict(),
+        cost_center=cost_center,
+        currency=currency.to_dict() if currency and currency.code is not CurrencyCode.COLOMBIAN_PESO else None,
+        seller=seller,
+        observations=observations,
+        items=[i.to_dict() for i in items],
+        payments=[p.to_dict() for p in payments],
+        retentions=[r.to_dict() for r in retentions] if retentions else None)
     req = requests.post(URL, headers=form_headers(token), json=data)
     res = req.json()
     check_for_errors(req=req, res=res)

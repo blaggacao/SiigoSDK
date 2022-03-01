@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional
+from siigo.utils.utils import opt_dict
 
 
 class ClientType(Enum):
@@ -87,7 +88,7 @@ class City:
     city_code: str
 
     def to_dict(self) -> dict:
-        return dict(
+        return opt_dict(
             country_code=self.country_code,
             state_code=self.state_code,
             city_code=self.city_code,
@@ -101,7 +102,7 @@ class Address:
     postal_code: Optional[str] = None
 
     def to_dict(self) -> dict:
-        return dict(
+        return opt_dict(
             address=self.address,
             postal_code=self.postal_code,
             city=self.city.to_dict(),
@@ -112,10 +113,10 @@ class Address:
 class Phone:
     number: str
     indicative: Optional[str] = None
-    extension: Optional[str] = None
+    extension: Optional[str] = ''
 
     def to_dict(self) -> dict:
-        return dict(
+        return opt_dict(
             indicative=self.indicative,
             number=self.number,
             extension=self.extension,
@@ -130,7 +131,7 @@ class ContactPerson:
     phone: Optional[Phone] = None
 
     def to_dict(self) -> dict:
-        return dict(
+        return opt_dict(
             first_name=self.first_name,
             last_name=self.last_name,
             email=self.email,
