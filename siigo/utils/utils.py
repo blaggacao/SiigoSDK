@@ -1,6 +1,6 @@
 import time
 from functools import wraps
-from typing import Any, Callable, TypeVar, Generator, Union
+from typing import Any, Callable, Generic, Type, TypeVar, Generator, Union, Protocol
 from siigo.models.auth import AuthToken
 
 
@@ -14,9 +14,15 @@ def form_headers(token: AuthToken) -> dict:
 T = TypeVar('T')
 
 
+class Paginable(Protocol, Generic[T]):
+
+    def __call__(self, token: AuthToken, **kwargs) -> Generator[T, None, None]:
+        ...
+
+
 def paginate(*, parse_response: Callable[[dict], T] = lambda x: x, delay=10, verbose=False):
 
-    def inner(func) -> Callable[[AuthToken], Generator[T, None, None]]:
+    def inner(func) -> Paginable[T]:
 
         @wraps(func)
         def wrapper(*args, **kwargs) -> Generator[T, None, None]:

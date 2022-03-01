@@ -1,3 +1,4 @@
+from typing import List, Optional
 import requests
 from siigo.models.auth import AuthToken
 from siigo.models.products import Item
@@ -9,10 +10,12 @@ URL = f'{BASE_URL}/v1/products'
 
 
 @paginate(parse_response=Item.from_dict, delay=5)
-def list_products(token: AuthToken, page: int):
+def list_products(token: AuthToken, page: int, ids: Optional[List[str]] = None):
+    ids_query = ({'ids': ','.join(ids)} if ids else {})
     req = requests.get(URL, params={
         'page': page,
         'page_size': 25,
+        **ids_query,
     }, headers=form_headers(token))
     return req.json()
 
