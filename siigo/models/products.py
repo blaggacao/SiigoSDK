@@ -39,9 +39,9 @@ class ItemDiscount:
 @dataclass
 class ItemTax:
     id: int
-    name: str
-    type: TaxType
-    percentage: float
+    name: Optional[str] = None
+    type: Optional[TaxType] = None
+    percentage: Optional[float] = None
     value: Optional[float] = None
 
     def to_dict(self) -> dict:
@@ -50,7 +50,7 @@ class ItemTax:
             name=self.name,
             percentage=self.percentage,
             value=self.value,
-            type=self.type.value,
+            type=self.type.value if self.type else None,
         )
 
     @staticmethod
