@@ -49,7 +49,7 @@ class ID:
     @staticmethod
     def from_dict(res: dict) -> 'ID':
         return ID(
-            type=DocType(res['id_type'].get('code', DocType.CC.value)),
+            type=DocType(str(res['id_type'].get('code', DocType.CC.value)).strip()),
             check_digit=res['check_digit'],
             id=res['identification'],
             name=res['id_type'].get('name'),
