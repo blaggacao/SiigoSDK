@@ -63,17 +63,17 @@ class Item:
     id: str
     name: str
     code: str
-    description: str
     quantity: float
     price: float
     taxes: List[ItemTax]
+    description: Optional[str] = None
     discount: Optional[ItemDiscount] = None
 
     def to_dict(self) -> dict:
         return opt_dict(
             id=self.id,
             code=self.code,
-            description=self.description or self.name,
+            description=self.description,
             quantity=self.quantity,
             price=self.price,
             taxes=[t.to_dict() for t in self.taxes],
@@ -90,7 +90,7 @@ class Item:
         return Item(id=data['id'],
                     name=data.get('name', ''),
                     code=data['code'],
-                    description=data['description'],
+                    description=data.get('description'),
                     quantity=data.get('quantity', 0),
                     price=price,
                     discount=ItemDiscount.from_dict(data.get('discount')),
