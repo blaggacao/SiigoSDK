@@ -140,7 +140,7 @@ class Invoice:
             currency=Currency.from_dict(res.get('currency')),
             total=res['total'],
             balance=res['balance'],
-            seller=res['seller'],
+            seller=res.get('seller', 0),
             items=[Item.from_dict(i) for i in res['items']],
             observations=res.get('observations'),
             payments=[Payment.from_dict(p) for p in res['payments']],
